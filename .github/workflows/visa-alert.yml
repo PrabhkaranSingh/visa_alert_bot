@@ -3,7 +3,7 @@ name: Visa Appointment Alert
 on:
   schedule:
     - cron: '*/30 * * * *'    # every 30 minutes
-  workflow_dispatch:          # optional manual trigger
+  workflow_dispatch:          # manual trigger option
 
 jobs:
   scrape:
@@ -35,4 +35,5 @@ jobs:
           VISA_PASS: ${{ secrets.VISA_PASS }}
           PROFILE_ID:${{ secrets.PROFILE_ID }}
         run: |
+          python scrape_appointments.py
           python alert_bot.py
