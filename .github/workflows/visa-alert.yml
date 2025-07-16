@@ -1,0 +1,38 @@
+name: Visa Appointment Alert
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'    # every 30 minutes
+  workflow_dispatch:          # optional manual trigger
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Headless Chrome & Chromedriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+
+      - name: Run Alert Bot
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID:   ${{ secrets.CHAT_ID }}
+          VISA_USER: ${{ secrets.VISA_USER }}
+          VISA_PASS: ${{ secrets.VISA_PASS }}
+          PROFILE_ID:${{ secrets.PROFILE_ID }}
+        run: |
+          python alert_bot.py
